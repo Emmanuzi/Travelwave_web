@@ -38,7 +38,7 @@ This project is developed as part of the incubation program at eMobilis Technolo
 - APIs (for payments and future tracking)
 - Django Admin Panel
 
-## Project Structure (Planned)
+## Project Structure.
 
 ```
 travelwave/
