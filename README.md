@@ -18,6 +18,15 @@ This project is developed as part of the incubation program at eMobilis Technolo
 - **Admin Dashboard** - Bus companies can manage routes, buses, and bookings.
 - **Mock Payment Integration** - API test mode or dummy payment page for demonstration.
 
+## Phase 1 Overview of the Project.
+Phase 1 of this project focuses on building a clean and fuctional foundation that demonstrates the core concept of the platform. Since the project is large and will grow in later phases, this first stage includes the essential features needed to showcase the working idea of the online bus booking and the parcel tracking.
+They include:
+   -Core bus booking logic
+   -Simplified parcel tracking
+   -Basic authentication
+   -Working admin management
+   -Early map-based bus tracking demo
+
 ## Tech Stack
 
 ### Frontend
