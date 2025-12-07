@@ -111,7 +111,7 @@ All development tasks are tracked under GitHub Issues, categorized as:
 - **TW-6**: Parcel tracking
 - **TW-7**: Payment integration
 - **TW-8**: UI polishing
-- **TW-9**: Deployment prep
+- **TW-9**: Deployment preparation
 
 ## Contributor
 
