@@ -55,7 +55,7 @@ travelwave/
 ├── travelwave/            # Django project core
 ├── booking/               # Bus booking app
 ├── parcels/               # Parcel tracking app
-├── accounts/              # User login/register
+├── users/              # User login/register
 │
 ├── templates/             # HTML templates
 ├── static/                # Bootstrap, CSS, JS
