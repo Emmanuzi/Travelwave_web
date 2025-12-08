@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+cursor/
+
+# Django environment
+*.log
+db.sqlite3
+media/
+
+# Virtual environment
+venv/
+env/
+
+# Environment variables
+.env
+*.env
+
+# VSCode settings
+.vscode/
+
+# IDE files
+.idea/
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Node (if ever needed)
+node_modules/
+
+# Byte-compiled
+*.bak
+*.swp
+*.swo
+
+# Compiled static files
+staticfiles/
