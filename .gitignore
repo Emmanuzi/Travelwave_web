@@ -40,3 +40,7 @@ node_modules/
 
 # Compiled static files
 staticfiles/
+
+# Ignore project-specific compiled files
+travelwave/__pycache__/
+travelwave/__pycache__/settings.cpython-313.pyc
