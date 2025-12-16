@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>
+      {% block title %}TravelWave - Smart Bus Booking & Parcel Tracking{%endblock %}
+    </title>
+
+    <!-- Bootstrap 5.3 CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+          <i class="bi bi-bus-front"></i> TravelWave
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'home' %}">
+                <i class="bi bi-house"></i> Home
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'bookings:search' %}">
+                <i class="bi bi-bus-front"></i> Book Bus
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'parcels:track' %}">
+                <i class="bi bi-box-seam"></i> Track Parcel
+              </a>
+            </li>
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'bookings:my_bookings' %}">
+                <i class="bi bi-ticket-perforated"></i> My Bookings
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:profile' %}">
+                <i class="bi bi-person-circle"></i> Profile
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:logout' %}">
+                <i class="bi bi-box-arrow-right"></i> Logout
+              </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'users:login' %}">
+                <i class="bi bi-box-arrow-in-right"></i> Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link btn btn-outline-light btn-sm ms-2"
+                href="{% url 'users:register' %}"
+              >
+                <i class="bi bi-person-plus"></i> Register
+              </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-5 pt-4">
+      {% for message in messages %}
+      <div
+        class="alert alert-{{ message.tags }} alert-dismissible fade show"
+        role="alert"
+      >
+        {{ message }}
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="{% block main_class %}{% endblock %}">
+      {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-4 mb-3 mb-md-0">
+            <h5 class="fw-bold"><i class="bi bi-bus-front"></i> TravelWave</h5>
+            <p class="text-muted small">
+              Your smart and modern bus booking & parcel tracking platform.
+              Simplifying travel and logistics for everyone.
+            </p>
+          </div>
+          <div class="col-md-4 mb-3 mb-md-0">
+            <h6 class="fw-bold">Quick Links</h6>
+            <ul class="list-unstyled">
+              <li>
+                <a
+                  href="{% url 'home' %}"
+                  class="text-muted text-decoration-none"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'bookings:search' %}"
+                  class="text-muted text-decoration-none"
+                  >Book Bus</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{% url 'parcels:track' %}"
+                  class="text-muted text-decoration-none"
+                  >Track Parcel</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h6 class="fw-bold">Contact</h6>
+            <p class="text-muted small mb-0">
+              <i class="bi bi-envelope"></i> info@travelwave.com<br />
+              <i class="bi bi-telephone"></i> +254 700 000 000
+            </p>
+          </div>
+        </div>
+        <hr class="my-3 bg-secondary" />
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="text-muted small mb-0">
+              &copy; {% now "Y" %} TravelWave. All rights reserved. | Developed
+              by <strong>Emmanuel Kibet Kiplimo</strong>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>
