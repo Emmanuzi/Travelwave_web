@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}Track Parcel - TravelWave{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-body text-center p-5">
+          <i class="bi bi-box-seam text-success" style="font-size: 4rem"></i>
+          <h2 class="mt-3 mb-3">Track Your Parcel</h2>
+          <p class="text-muted">
+            {{ message|default:"This feature will be available soon. You'll be
+            able to track your parcels using a tracking number." }}
+          </p>
+          <a href="{% url 'home' %}" class="btn btn-primary mt-3">
+            <i class="bi bi-arrow-left"></i> Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

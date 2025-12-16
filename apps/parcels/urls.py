@@ -6,6 +6,7 @@ app_name = 'parcels'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    # Add more parcel-related URLs here (track, create, view, etc.)
+    path('track/', views.track, name='track'),
+    # Add more parcel-related URLs here (create, view, etc.)
 ]
 

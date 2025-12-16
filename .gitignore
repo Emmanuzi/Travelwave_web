@@ -30,7 +30,7 @@ env/
 .DS_Store
 Thumbs.db
 
-# Node (if ever needed)
+# Node
 node_modules/
 
 # Byte-compiled
