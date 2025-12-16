@@ -1,0 +1,249 @@
+/* TravelWave Custom Styles */
+
+:root {
+  --tw-primary: #0d6efd;
+  --tw-secondary: #6c757d;
+  --tw-success: #198754;
+  --tw-warning: #ffc107;
+  --tw-danger: #dc3545;
+  --tw-info: #0dcaf0;
+  --tw-dark: #212529;
+  --tw-light: #f8f9fa;
+
+  /* Custom brand colors */
+  --tw-brand-blue: #0d6efd;
+  --tw-brand-teal: #20c997;
+  --tw-brand-orange: #fd7e14;
+}
+
+/* Global Styles */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding-top: 76px; /* Account for fixed navbar */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Navigation Bar */
+.navbar-brand {
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+}
+
+.navbar-nav .nav-link {
+  font-weight: 500;
+  transition: color 0.3s ease;
+  margin: 0 0.25rem;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--tw-warning) !important;
+}
+
+/* Hero Section */
+.hero-section {
+  background: linear-gradient(135deg, var(--tw-primary) 0%, #0056b3 100%);
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+}
+
+.min-vh-50 {
+  min-height: 50vh;
+}
+
+.hero-image {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 10px;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.feature-icon {
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+  transform: scale(1.1);
+}
+
+/* Step Numbers */
+.step-number {
+  font-size: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.step-number:hover {
+  transform: scale(1.1);
+}
+
+/* Buttons */
+.btn {
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1.5rem;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+  background: var(--tw-primary);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-warning {
+  background: var(--tw-warning);
+  color: var(--tw-dark);
+  border: none;
+}
+
+.btn-warning:hover {
+  background: #e0a800;
+  color: var(--tw-dark);
+}
+
+/* Cards */
+.card {
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Forms */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--tw-primary);
+  box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+/* Alerts */
+.alert {
+  border-radius: 8px;
+  border: none;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+}
+
+footer a {
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: var(--tw-warning) !important;
+}
+
+/* Home Page Specific */
+.home-page {
+  padding-top: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 60vh;
+    text-align: center;
+  }
+
+  .display-4 {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+  }
+
+  .btn-lg {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+  }
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom utilities */
+.text-brand {
+  color: var(--tw-primary);
+}
+
+.bg-brand {
+  background-color: var(--tw-primary);
+}
+
+/* Animation for page load */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.feature-card,
+.step-number {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.feature-card:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.feature-card:nth-child(3) {
+  animation-delay: 0.2s;
+}
