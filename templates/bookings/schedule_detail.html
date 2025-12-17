@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Select Seats - TravelWave{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card shadow mb-4">
+        <div class="card-body">
+          <h3 class="mb-3"><i class="bi bi-bus-front text-primary"></i> Schedule Details</h3>
+          <div class="row g-3">
+            <div class="col-md-4">
+              <strong>Route:</strong><br />
+              <span class="text-muted">{{ schedule.route.origin }} → {{ schedule.route.destination }}</span>
+            </div>
+            <div class="col-md-4">
+              <strong>Date:</strong><br />
+              <span class="text-muted">{{ schedule.departure_time|date:"Y-m-d" }}</span>
+            </div>
+            <div class="col-md-4">
+              <strong>Time:</strong><br />
+              <span class="text-muted">{{ schedule.departure_time|time:"H:i" }} → {{ schedule.arrival_time|time:"H:i" }}</span>
+            </div>
+            <div class="col-md-4">
+              <strong>Bus:</strong><br />
+              <span class="text-muted">{{ schedule.bus.bus_number }} ({{ schedule.bus.get_bus_type_display }})</span>
+            </div>
+            <div class="col-md-4">
+              <strong>Company:</strong><br />
+              <span class="text-muted">{{ schedule.bus.company.name }}</span>
+            </div>
+            <div class="col-md-4">
+              <strong>Price per seat:</strong><br />
+              <span class="text-muted">KES {{ schedule.price }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% if messages_dict and messages_dict.error %}
+      <div class="alert alert-danger">{{ messages_dict.error }}</div>
+      {% endif %}
+
+      <div class="card shadow">
+        <div class="card-body">
+          <h4 class="mb-3"><i class="bi bi-grid-3x3-gap text-primary"></i> Select Seats</h4>
+          <form method="post">
+            {% csrf_token %}
+            <div class="row g-2">
+              {% for seat in seats %}
+              <div class="col-3 col-sm-2 col-md-2">
+                <div class="form-check">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    name="seats"
+                    value="{{ seat.seat_number }}"
+                    id="seat-{{ seat.id }}"
+                    {% if seat.status != 'available' %}disabled{% endif %}
+                  />
+                  <label class="form-check-label" for="seat-{{ seat.id }}">
+                    Seat {{ seat.seat_number }}
+                    {% if seat.status != 'available' %}
+                    <span class="badge bg-secondary ms-1">{{ seat.get_status_display }}</span>
+                    {% endif %}
+                  </label>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            <div class="d-flex gap-2 mt-4">
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle"></i> Book Selected Seats
+              </button>
+              <a href="{% url 'bookings:search' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Back to Search
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+

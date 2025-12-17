@@ -8,6 +8,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('search/', views.search, name='search'),
     path('my-bookings/', views.my_bookings, name='my_bookings'),
-    # Add more booking-related URLs here (book, view bookings, etc.)
+    path('schedule/<int:schedule_id>/', views.schedule_detail, name='schedule_detail'),
 ]
 

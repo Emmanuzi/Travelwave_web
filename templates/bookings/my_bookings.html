@@ -3,23 +3,54 @@
 {% block content %}
 <div class="container my-5">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-lg-10">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0"><i class="bi bi-ticket-perforated text-primary"></i> My Bookings</h2>
+        <a href="{% url 'bookings:search' %}" class="btn btn-primary btn-sm"><i class="bi bi-search"></i> Book another</a>
+      </div>
+
+      {% if bookings %}
       <div class="card shadow">
-        <div class="card-body text-center p-5">
-          <i
-            class="bi bi-ticket-perforated text-primary"
-            style="font-size: 4rem"
-          ></i>
-          <h2 class="mt-3 mb-3">My Bookings</h2>
-          <p class="text-muted">
-            {{ message|default:"This feature will be available soon. You'll be
-            able to view all your bookings here." }}
-          </p>
-          <a href="{% url 'home' %}" class="btn btn-primary mt-3">
-            <i class="bi bi-arrow-left"></i> Back to Home
-          </a>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table mb-0 align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>#</th>
+                  <th>Route</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Seats</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for booking in bookings %}
+                <tr>
+                  <td>{{ booking.id }}</td>
+                  <td>{{ booking.schedule.route.origin }} → {{ booking.schedule.route.destination }}</td>
+                  <td>{{ booking.schedule.departure_time|date:"Y-m-d" }}</td>
+                  <td>{{ booking.schedule.departure_time|time:"H:i" }}</td>
+                  <td>
+                    {% for seat in booking.seats.all %}
+                      <span class="badge bg-secondary me-1 mb-1">Seat {{ seat.seat_number }}</span>
+                    {% endfor %}
+                  </td>
+                  <td>KES {{ booking.total_price }}</td>
+                  <td>
+                    <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
+      {% else %}
+      <div class="alert alert-info">You have no bookings yet. Start by searching for a bus.</div>
+      {% endif %}
     </div>
   </div>
 </div>
