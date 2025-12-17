@@ -5,11 +5,13 @@ from django.contrib import messages
 import json
 from pathlib import Path
 
-# Create your views here.
+from .models import Profile
+from .forms import ProfileForm
 
 # #region agent log
 LOG_PATH = Path(__file__).resolve().parent.parent.parent / '.cursor' / 'debug.log'
 # #endregion
+
 
 def _log_debug(session_id, run_id, hypothesis_id, location, message, data):
     """Helper to write debug logs in NDJSON format."""
@@ -21,12 +23,19 @@ def _log_debug(session_id, run_id, hypothesis_id, location, message, data):
             "location": location,
             "message": message,
             "data": data,
-            "timestamp": __import__('time').time() * 1000
+            "timestamp": __import__('time').time() * 1000,
         }
         with open(LOG_PATH, 'a', encoding='utf-8') as f:
             f.write(json.dumps(log_entry) + '\n')
     except Exception:
         pass
+
+
+def _get_or_create_profile(user):
+    """Return a Profile instance for the given user, creating it if needed."""
+    profile, _ = Profile.objects.get_or_create(user=user)
+    return profile
+
 
 def index(request):
     """Home page for users app."""
@@ -88,23 +97,119 @@ def register(request):
 
 @login_required
 def profile(request):
-    """Placeholder for profile page - will be implemented in TW-3."""
+    """Display the authenticated user's profile and basic account info."""
     # #region agent log
-    _log_debug('debug-session', 'run1', 'B', 'apps/users/views.py:profile', 'View entry', {'method': request.method, 'path': request.path, 'user': request.user.username if request.user.is_authenticated else 'anonymous'})
+    _log_debug(
+        'debug-session',
+        'run1',
+        'B',
+        'apps/users/views.py:profile',
+        'View entry',
+        {
+            'method': request.method,
+            'path': request.path,
+            'user': request.user.username if request.user.is_authenticated else 'anonymous',
+        },
+    )
     # #endregion
     template_name = 'users/profile.html'
-    context = {'user': request.user}
+    profile = _get_or_create_profile(request.user)
+    context = {'user': request.user, 'profile': profile}
     # #region agent log
-    _log_debug('debug-session', 'run1', 'B', 'apps/users/views.py:profile', 'Before render', {'template': template_name, 'context_keys': list(context.keys())})
+    _log_debug(
+        'debug-session',
+        'run1',
+        'B',
+        'apps/users/views.py:profile',
+        'Before render',
+        {'template': template_name, 'context_keys': list(context.keys())},
+    )
     # #endregion
     try:
         response = render(request, template_name, context)
         # #region agent log
-        _log_debug('debug-session', 'run1', 'B', 'apps/users/views.py:profile', 'Render success', {'template': template_name})
+        _log_debug(
+            'debug-session',
+            'run1',
+            'B',
+            'apps/users/views.py:profile',
+            'Render success',
+            {'template': template_name},
+        )
         # #endregion
         return response
     except Exception as e:
         # #region agent log
-        _log_debug('debug-session', 'run1', 'B', 'apps/users/views.py:profile', 'Render error', {'template': template_name, 'error': str(e), 'error_type': type(e).__name__})
+        _log_debug(
+            'debug-session',
+            'run1',
+            'B',
+            'apps/users/views.py:profile',
+            'Render error',
+            {'template': template_name, 'error': str(e), 'error_type': type(e).__name__},
+        )
+        # #endregion
+        raise
+
+
+@login_required
+def edit_profile(request):
+    """Allow the authenticated user to update their profile details."""
+    profile = _get_or_create_profile(request.user)
+    # #region agent log
+    _log_debug(
+        'debug-session',
+        'run1',
+        'B',
+        'apps/users/views.py:edit_profile',
+        'View entry',
+        {'method': request.method, 'path': request.path, 'user': request.user.username},
+    )
+    # #endregion
+
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated.')
+            return redirect('users:profile')
+    else:
+        form = ProfileForm(instance=profile)
+
+    template_name = 'users/profile_edit.html'
+    context = {'form': form}
+    # #region agent log
+    _log_debug(
+        'debug-session',
+        'run1',
+        'B',
+        'apps/users/views.py:edit_profile',
+        'Before render',
+        {'template': template_name, 'form_valid': form.is_valid() if request.method == 'POST' else None},
+    )
+    # #endregion
+    try:
+        response = render(request, template_name, context)
+        # #region agent log
+        _log_debug(
+            'debug-session',
+            'run1',
+            'B',
+            'apps/users/views.py:edit_profile',
+            'Render success',
+            {'template': template_name},
+        )
+        # #endregion
+        return response
+    except Exception as e:
+        # #region agent log
+        _log_debug(
+            'debug-session',
+            'run1',
+            'B',
+            'apps/users/views.py:edit_profile',
+            'Render error',
+            {'template': template_name, 'error': str(e), 'error_type': type(e).__name__},
+        )
         # #endregion
         raise

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-f6!$ia&ydk_x8!+p!f%@a*%ra$1x@nr3%jwapr*eoj)etk_g#%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.41', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['192.168.1.43', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -133,3 +133,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/users/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Email settings (development)
+# For Phase 1, use console backend so password reset emails print to the console.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'no-reply@travelwave.local'
