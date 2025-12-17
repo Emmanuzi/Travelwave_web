@@ -113,10 +113,18 @@ class Seat(models.Model):
         (RESERVED, "Reserved"),
         (BOOKED, "Booked"),
     ]
+    DRIVER = "driver"
+    PASSENGER = "passenger"
+
+    SEAT_TYPE_CHOICES = [
+        (DRIVER, "Driver seat"),
+        (PASSENGER, "Passenger seat"),
+    ]
 
     schedule = models.ForeignKey(Schedule, on_delete=models.CASCADE, related_name="seats")
     seat_number = models.CharField(max_length=10)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=AVAILABLE)
+    seat_type = models.CharField(max_length=10, choices=SEAT_TYPE_CHOICES, default=PASSENGER)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -7,6 +7,9 @@
       <div class="card shadow mb-4">
         <div class="card-body p-4">
           <h2 class="mb-3"><i class="bi bi-search text-primary"></i> Find a Bus</h2>
+          {% if error %}
+          <div class="alert alert-danger">{{ error }}</div>
+          {% endif %}
           <form method="get" class="row g-3">
             <div class="col-md-4">
               <label class="form-label">Origin</label>
@@ -41,6 +44,7 @@
                   <th>Departure</th>
                   <th>Arrival</th>
                   <th>Bus / Company</th>
+                  <th>Available Seats</th>
                   <th>Price</th>
                   <th></th>
                 </tr>
@@ -55,6 +59,9 @@
                   <td>
                     {{ schedule.bus.bus_number }}<br />
                     <small class="text-muted">{{ schedule.bus.company.name }} • {{ schedule.bus.get_bus_type_display }}</small>
+                  </td>
+                  <td>
+                    <span class="badge bg-success">{{ schedule.available_seats_count }}</span>
                   </td>
                   <td>KES {{ schedule.price }}</td>
                   <td>

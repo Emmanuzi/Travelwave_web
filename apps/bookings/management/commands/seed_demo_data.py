@@ -141,14 +141,16 @@ class Command(BaseCommand):
             if schedule.seats.exists():
                 continue
             capacity = schedule.bus.capacity
-            seats = [
-                Seat(
+            seats = []
+            for i in range(capacity):
+                seat_type = Seat.DRIVER if i == 0 else Seat.PASSENGER
+                seat = Seat(
                     schedule=schedule,
                     seat_number=str(i + 1),
                     status=Seat.AVAILABLE,
+                    seat_type=seat_type,
                 )
-                for i in range(capacity)
-            ]
+                seats.append(seat)
             Seat.objects.bulk_create(seats)
             created_total += capacity
         self.stdout.write(self.style.SUCCESS(f"Created {created_total} seats across schedules"))
