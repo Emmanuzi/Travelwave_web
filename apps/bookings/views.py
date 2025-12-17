@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.utils import timezone
 import json
 from pathlib import Path
 
+from django.db.models import Count, Q
 from .models import Route, Schedule, Seat, Booking
 
 # Create your views here.
@@ -62,11 +64,13 @@ def search(request):
 
     schedules = []
     selected_date = None
+    error = None
     if date_str:
         try:
             selected_date = timezone.datetime.strptime(date_str, "%Y-%m-%d").date()
         except ValueError:
             selected_date = None
+            error = "Invalid date format. Please use the date picker."
 
     if origin or destination or selected_date:
         qs = Schedule.objects.select_related('route', 'bus', 'bus__company').filter(status=Schedule.ACTIVE)
@@ -76,13 +80,19 @@ def search(request):
             qs = qs.filter(route__destination__icontains=destination)
         if selected_date:
             qs = qs.filter(departure_time__date=selected_date)
+        qs = qs.annotate(
+            available_seats_count=Count('seats', filter=Q(seats__status=Seat.AVAILABLE))
+        )
         schedules = qs.order_by('departure_time')
+    elif request.GET:
+        error = "Please enter at least origin, destination, or date to search."
 
     context = {
         'origin': origin,
         'destination': destination,
         'date': date_str,
         'schedules': schedules,
+        'error': error,
     }
     _log_debug('debug-session', 'run1', 'B', 'apps/bookings/views.py:search', 'Before render', {'template': template_name, 'context_keys': list(context.keys())})
     try:
@@ -121,8 +131,20 @@ def schedule_detail(request, schedule_id):
     )
     template_name = 'bookings/schedule_detail.html'
 
-    # Available seats
-    seats = schedule.seats.all().order_by('seat_number')
+    seats_qs = schedule.seats.all().order_by('seat_number')
+    driver_seat = seats_qs.filter(seat_type=Seat.DRIVER).first()
+    passenger_seats = seats_qs.exclude(id=driver_seat.id) if driver_seat else seats_qs
+
+    # group passenger seats into rows of 4 (2 + aisle + 2)
+    rows = []
+    row = []
+    for seat in passenger_seats:
+        row.append(seat)
+        if len(row) == 4:
+            rows.append(row)
+            row = []
+    if row:
+        rows.append(row)
     selected_seat_numbers = request.POST.getlist('seats')
 
     if request.method == 'POST':
@@ -151,6 +173,34 @@ def schedule_detail(request, schedule_id):
             booking.seats.add(*seats_to_book)
             seats_to_book.update(status=Seat.BOOKED)
 
+        messages.success(request, "Your booking was created successfully!")
         return redirect('bookings:my_bookings')
 
-    return render(request, template_name, {'schedule': schedule, 'seats': seats})
+    context = {
+        'schedule': schedule,
+        'driver_seat': driver_seat,
+        'seat_rows': rows,
+    }
+    return render(request, template_name, context)
+
+
+@login_required
+def booking_detail(request, booking_id):
+    """Show details of a single booking and allow cancellation."""
+    booking = get_object_or_404(
+        Booking.objects.select_related('schedule', 'schedule__route', 'schedule__bus', 'schedule__bus__company').prefetch_related('seats'),
+        id=booking_id,
+        user=request.user,
+    )
+    template_name = 'bookings/booking_detail.html'
+
+    if request.method == 'POST' and booking.status == Booking.CONFIRMED:
+        with transaction.atomic():
+            # Mark booking cancelled and free seats
+            booking.status = Booking.CANCELLED
+            booking.save(update_fields=['status'])
+            Seat.objects.filter(id__in=booking.seats.values_list('id', flat=True), status=Seat.BOOKED).update(status=Seat.AVAILABLE)
+        messages.success(request, "Your booking has been cancelled and seats are now available again.")
+        return redirect('bookings:my_bookings')
+
+    return render(request, template_name, {'booking': booking})

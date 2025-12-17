@@ -177,6 +177,21 @@ footer a:hover {
   color: var(--tw-warning) !important;
 }
 
+/* Bus layout */
+.bus-layout {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.bus-layout .form-check {
+  min-width: 60px;
+  text-align: center;
+}
+
+.bus-layout .form-check-input {
+  margin-right: 0;
+}
+
 /* Home Page Specific */
 .home-page {
   padding-top: 0;

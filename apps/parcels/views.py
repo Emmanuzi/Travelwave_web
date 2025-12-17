@@ -2,7 +2,7 @@ from django.shortcuts import render
 import json
 from pathlib import Path
 
-# Create your views here.
+from .models import Parcel
 
 # #region agent log
 LOG_PATH = Path(__file__).resolve().parent.parent.parent / '.cursor' / 'debug.log'
@@ -48,23 +48,28 @@ def index(request):
 
 
 def track(request):
-    """Placeholder for parcel tracking page - will be implemented in TW-6."""
-    # #region agent log
+    """Simple parcel tracking by tracking number."""
     _log_debug('debug-session', 'run1', 'B', 'apps/parcels/views.py:track', 'View entry', {'method': request.method, 'path': request.path})
-    # #endregion
     template_name = 'parcels/track.html'
-    context = {'message': 'Parcel tracking functionality coming soon!'}
-    # #region agent log
+    tracking_number = request.GET.get('tracking_number', '').strip()
+    parcel = None
+    not_found = False
+
+    if tracking_number:
+        parcel = Parcel.objects.filter(tracking_number__iexact=tracking_number).first()
+        if not parcel:
+            not_found = True
+
+    context = {
+        'tracking_number': tracking_number,
+        'parcel': parcel,
+        'not_found': not_found,
+    }
     _log_debug('debug-session', 'run1', 'B', 'apps/parcels/views.py:track', 'Before render', {'template': template_name, 'context_keys': list(context.keys())})
-    # #endregion
     try:
         response = render(request, template_name, context)
-        # #region agent log
         _log_debug('debug-session', 'run1', 'B', 'apps/parcels/views.py:track', 'Render success', {'template': template_name})
-        # #endregion
         return response
     except Exception as e:
-        # #region agent log
         _log_debug('debug-session', 'run1', 'B', 'apps/parcels/views.py:track', 'Render error', {'template': template_name, 'error': str(e), 'error_type': type(e).__name__})
-        # #endregion
         raise

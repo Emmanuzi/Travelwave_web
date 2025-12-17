@@ -28,7 +28,7 @@
               <tbody>
                 {% for booking in bookings %}
                 <tr>
-                  <td>{{ booking.id }}</td>
+                  <td><a href="{% url 'bookings:booking_detail' booking.id %}">{{ booking.id }}</a></td>
                   <td>{{ booking.schedule.route.origin }} → {{ booking.schedule.route.destination }}</td>
                   <td>{{ booking.schedule.departure_time|date:"Y-m-d" }}</td>
                   <td>{{ booking.schedule.departure_time|time:"H:i" }}</td>
@@ -39,7 +39,11 @@
                   </td>
                   <td>KES {{ booking.total_price }}</td>
                   <td>
+                    {% if booking.status == 'cancelled' %}
+                    <span class="badge bg-secondary">{{ booking.get_status_display }}</span>
+                    {% else %}
                     <span class="badge bg-success">{{ booking.get_status_display }}</span>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
