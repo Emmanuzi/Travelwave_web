@@ -33,17 +33,89 @@ main {
 .navbar-brand {
   font-size: 1.5rem;
   letter-spacing: 0.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
+
+.navbar-brand:hover{
+  transform: scale(1.03);
+}
+
 
 .navbar-nav .nav-link {
   font-weight: 500;
-  transition: color 0.3s ease;
-  margin: 0 0.25rem;
+  transition: 
+     color 0.3s ease,
+     transform 0.25s ease,
+     letter-spacing 0.25s ease;
+  margin: 0 0.6rem;
+  position: relative;
+  padding: 0.4rem 0;
+  color: #eaf1ff;
+
 }
 
 .navbar-nav .nav-link:hover {
-  color: var(--tw-warning) !important;
+  color: var(--tw-warning);
+  transform: translateY(-2px);
+  letter-spacing: 0.4px;
 }
+/* Animated underline effect on hover */
+.navbar-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -6px;
+  left: 50%;
+  background-color: var(--tw-warning);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+
+.navbar-nav .nav-link::before {
+  content: "";
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  background-color: var(--tw-warning);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translateX(-50%) scale(0);
+  transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+.navbar-nav .nav-link.active {
+  color: var(--tw-warning);
+  font-weight: 600;
+}
+
+.navbar-nav .nav-link.active::after {
+  width: 100%;
+}
+
+.navbar {
+  backdrop-filter: blur(6px);
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
 
 /* Hero Section */
 .hero-section {
@@ -261,4 +333,8 @@ html {
 
 .feature-card:nth-child(3) {
   animation-delay: 0.2s;
+}
+/* Smooth global transitions */
+* {
+  transition: all 0.25s ease-in-out;
 }
